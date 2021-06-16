@@ -1,0 +1,7 @@
+/* JSP 내장 객체 */
+scope = life-cycle
+1. application  : Server를 운영하는데 필요한 환경을 저장
+2. session			: Browser로 서버에 최초 요청시 생성 --> 클라이언트와 요청과 무관하게 데이터 저장 가능
+3. request + response
+								: Client 요청시 생성이되고 서버가 응답을 할 때까지 유효
+4. page-context : reqeust response  --> 해당 페이지의 정보
