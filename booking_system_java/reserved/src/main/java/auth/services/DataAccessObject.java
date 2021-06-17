@@ -1,224 +1,183 @@
 package auth.services;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import beans.Action;
 import beans.Member;
 
-class DataAccessObject {
-	Connection connection;
-	PreparedStatement pstmt;
-	ResultSet rs;
-	
-	DataAccessObject() {
-		this.connection = null;
-		this.pstmt = null;
-		this.rs = null;
-	}
+public class Authentication {
+	private Member member;
+	private Action action;
+	private DataAccessObject dao;
+	private HttpSession session;
 
-	/*Process 1 ~ Process 2*/
-	void dbOpen() {
-		String driver = "oracle.jdbc.driver.OracleDriver";
-		String url = "jdbc:oracle:thin:@192.168.0.182:1521:xe";
-		String id = "DINGDONG";
-		String pwd = "1234";
-
-		try {
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, id, pwd);
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public Authentication() {
 
 	}
 
-	/* Process 8 */
-	void dbClose() {
-		try {
-			if(!connection.isClosed()) {
-				connection.close();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+	public Action backController(int ServiceCode, HttpServletRequest req) {
+		
+		switch(ServiceCode) {
+		case 1: // 로그인
+			this.logInCtl(req);
+			break;
+		case -1: //로그아웃
+			this.logOutCtl(req);
+			break;
+		case 3: //중복검사
+			this.dupCheckCtl(req);
+			break;
+		case 2: //회원가입
+			this.joinCtl(req);
+			break;
 		}
+		return action;
 	}
 	
-	/* 아이디 존재 여부 */
-	int isUserId(Member member) {
-		int result = 0;
-		String query = "SELECT COUNT(*) AS ISID FROM TB_CON WHERE CON_ID = ?";
+	private void logOutCtl(HttpServletRequest req) {
+		action = new Action();
+		action.setPage("access.jsp");
+		
+		HttpSession session = req.getSession();
+		session.invalidate();
+		
+		
+	}
+
+	private void logInCtl(HttpServletRequest req) {
+		action = new Action();
+		action.setPage("access.jsp");
+		action.setRedirect(false);
+		String message = "아이디나 패스워드를 확인해 주세요!";
+
+		// bean에 데이터 저장 :: Member Bean
+		member = new Member();
+		member.setAccessType(req.getParameter("accessType"));
+		member.setMemberId(req.getParameter("uCode"));
+		member.setMemberPassword(req.getParameter("aCode"));
+		
+		dao = new DataAccessObject();
+		dao.dbOpen();
+
+		if(this.isUserId()) {
+			if(this.isAccess()) {
+				// history table >> 로그인 정보 저장
+				// HttpSession 처리
+				session = req.getSession(true);
+				session.setAttribute("access", true);
 				
-		try {
-			pstmt = connection.prepareStatement(query);
-			pstmt.setNString(1, member.getMemberId());
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				result = rs.getInt("ISID");
+				member.setMemberPassword(null);
+				this.getUserInfo();
+				req.setAttribute("info", this.member);
+				action.setPage((member.getAccessType().equals("G"))? "cMain.jsp" : "rMain.jsp");				
+			}else {
+				req.setAttribute("message", message);
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		}else {
+			req.setAttribute("message", message);
 		}
 		
-		return result;
-	}
-	
-	int isRestaurantCode(Member member) {
-		int result = 0;
-		String query = "SELECT COUNT(*) AS ISID FROM TB_ST WHERE ST_CODE = ?";
-				
-		try {
-			pstmt = connection.prepareStatement(query);
-			pstmt.setNString(1, member.getMemberId());
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				result = rs.getInt("ISID");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		dao.dbClose();
 		
-		return result;
 	}
-	
-	/* 아이디 패스워드 일치 여부 */
-	int isAccess(Member member) {
-		int result = 0;
-		String query = "SELECT COUNT(*) AS ISUSER FROM TB_CON WHERE CON_ID = ? AND CON_PASSWORD = ?";
-		try {
-			pstmt = connection.prepareStatement(query);
-			pstmt.setNString(1, member.getMemberId());
-			pstmt.setNString(2, member.getMemberPassword());
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				result = rs.getInt("ISUSER");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
+	private boolean isUserId() {
+		return this.convertData(member.getAccessType().equals("G")? this.dao.isUserId(member) : this.dao.isRestaurantCode(member));
 	}
-	
-	int isRestaurantAccess(Member member) {
-		int result = 0;
-		String query = "SELECT COUNT(*) AS ISUSER FROM TB_ST WHERE ST_CODE = ? AND ST_ACCESS = ?";
-		try {
-			pstmt = connection.prepareStatement(query);
-			pstmt.setNString(1, member.getMemberId());
-			pstmt.setNString(2, member.getMemberPassword());
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				result = rs.getInt("ISUSER");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
+	private boolean isAccess() {
+		return this.convertData(member.getAccessType().equals("G")? this.dao.isAccess(member) : this.dao.isRestaurantAccess(member));
 	}
-	/* 로그인된 사용자 정보 가져오기*/
-	void getUserInfo(Member member) {
-		String result = null;
-		String query = "SELECT CU_NAME AS CUNAME FROM TB_CON WHERE CON_ID = ?";
-		try {
-			pstmt = connection.prepareStatement(query);
-			pstmt.setNString(1, member.getMemberId());
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				member.setMemberName(rs.getNString("CUNAME"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+	private void getUserInfo() {
+		if(member.getAccessType().equals("G")) {
+			this.dao.getUserInfo(member);
+		}else {
+			this.dao.getRestaurantInfo(member);
 		}
 	}
-	
-	void getRestaurantInfo(Member member) {
-		String query = "SELECT * FROM REINFO WHERE RCODE = ?";
-		try {
-			pstmt = connection.prepareStatement(query);
-			pstmt.setNString(1, member.getMemberId());
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				member.setMemberName(rs.getNString("RNAME"));
-				member.setMemberEtc(rs.getNString("RCEO"));
-				member.setCategoryCode(rs.getNString("RCATE"));
-				member.setCategory(rs.getNString("FCNAME"));
-				member.setLocation(rs.getNString("RLOCATE"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
+	private boolean convertData(int data) {
+		return (data==1)? true: false; 
 	}
+
 	
-	int setNewMember(Member member) {
-		int result = 0;
-		String query = member.getMemberEtc() != null? "INSERT INTO CU(CU_ID, CU_PASSWORD, CU_NAME, CU_PHONE) VALUES(?, ?, ?, ?)": "INSERT INTO CU(CU_ID, CU_PASSWORD, CU_NAME, CU_PHONE) VALUES(?, ?, ?, DEFAULT)";
+
+	private void dupCheckCtl(HttpServletRequest req) {
+		action = new Action();
+		action.setPage("join.jsp");
+		action.setRedirect(false);
+		String message = "사용 불가능한 아이디입니다.";
+		dao = new DataAccessObject();
+		dao.dbOpen();
+
+		// Member Bean에 id injection
+		member = new Member();
+		member.setAccessType(req.getParameter("accessType"));
+		member.setMemberId(req.getParameter("uCode"));
+
+		// isUserId(Member)  : true >> 중복   false >> 사용가능 아이디
+		if(!this.isUserId()) {
+			// BackEnd 응답
+			message = "사용 가능한 아이디입니다.";
+			req.setAttribute("uCode", member.getMemberId());	
+		}
+
+		dao.dbClose();
+		req.setAttribute("message", message);
 		
-		try {
-			pstmt = connection.prepareStatement(query);
-			pstmt.setNString(1, member.getMemberId());
-			pstmt.setNString(2, member.getMemberPassword());
-			pstmt.setNString(3, member.getMemberName());
-			if(member.getMemberEtc() != null) {
-				pstmt.setNString(4, member.getMemberEtc());
-			}
-						
-			result = pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
-	
-	int setNewRestaurantMember(Member member) {
-		int result = 0;
-		String query = "INSERT INTO RE(RE_CODE, RE_NAME, RE_CEO, RE_CATE, RE_ACCESS, RE_LOCATE) "
-				+ "VALUES(?, ?, ?, ?, ?, ?)"; 
+
+	private void joinCtl(HttpServletRequest req) {
+		action = new Action();
+		action.setPage("join.jsp");
+		action.setRedirect(false);
+		// Memeber Bean에 Client로부터 전송된 데이터 담기
+		member = new Member();
+		member.setAccessType(req.getParameter("accessType"));
+		member.setMemberId(req.getParameter("uCode"));
+		member.setMemberPassword(req.getParameter("aCode"));
+		member.setMemberName(req.getParameter("uName")); // uName, restaurantName
+		member.setMemberEtc(req.getParameter("uPhone")); // uPhone, ceoName
+		if(member.getAccessType().equals("R")) {
+			member.setCategoryCode(req.getParameter("rType"));
+			member.setLocation(req.getParameter("location"));
+		}
+
+		// DataAccessObject 활성화
+		dao = new DataAccessObject();
+		dao.dbOpen();
+		// setNewMember() << 일반 회원 가입
+		if(this.setNewMember()) {
+			action.setPage("join.jsp");
+			action.setRedirect(true);
+		}
+		dao.dbClose();
+
 		
-		try {
-			pstmt = connection.prepareStatement(query);
-			pstmt.setNString(1, member.getMemberId());
-			pstmt.setNString(5, member.getMemberPassword());
-			pstmt.setNString(2, member.getMemberName());
-			pstmt.setNString(3, member.getMemberEtc());
-			pstmt.setNString(4, member.getCategoryCode());
-			pstmt.setNString(6, member.getLocation());
-			
-			result = pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
+
+	private boolean setNewMember() {
+		int result;
+		if(member.getAccessType().equals("G")) {
+			result = dao.setNewMember(member);
+		}else {
+			result = dao.setNewRestaurantMember(member);
+		}
+		return this.convertData(result);
+	}
+
 }
 
-/* JAVA :: JDBC + ORACLE :: OJDBC6.JAR
- * *** Tomcat\lib\ojdbc6
- * 1. Driver Loading >> Class.forName(driver) >> oracle.jdbc.driver.OracleDriver 
- * 2. Driver Manager를 통한 Oracle 접속 >> Connection, DriverManger
- * 3. DML | Query작성
- * 4. Statement | PreparedStatement 에 query전달
- * 5. Execute >> DML:: executeUpdate     Query :: ExecuteQuery 
- * 6. Oracle >> return >> Query :: ResultSet    DML :: Integer
- * (7). ResultSet :: fetch --> java object에 저장
- * 8. Connection close
- *     
- */
 
 
-
+/* 원활한 데이터의 흐름 및 관리를 위해 데이터의 패턴화 
+ * VO(value object) ~ DTO(data transfer object) 
+ * 			--> 여러개의 분리된 데이터를 하나의 공간에 모아 저장하는 기술
+ *          --> Bean : 타입이 다른 여러개의 데이터를 하나의 클래스에 저장하고 활용하는 기술
+ * 
+ * 활용 
+ *   ~Ctl() : bean 생성 --> 클라이언트로 부터 전달 받은 데이터를 저장
+ *                     --> 해당 잡의 모든 프로세스에서 필요한 데이터는 bean을 이용함.
+ * */
 
 
 

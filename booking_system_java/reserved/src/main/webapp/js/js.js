@@ -263,3 +263,30 @@ function callMessage(message){
 		alert(message);
 	}
 }
+
+function search() {
+	let searchWord = document.getElementsByName("word")[0];
+	if(searchWord == ""){
+		alert("검색어 입력");
+		searchWord.focus();
+		return;
+	}
+	let form = document.createElement("form");
+	
+	form.method = "get";
+	form.action = "Search";
+	form.appendChild(searchWord);
+	document.body.appendChild(form);
+	
+	form.submit();
+	
+}
+
+function reserve(){
+	let rCode = document.getElementsByName("rCode")[0];
+	alert(rCode);
+	
+function resList(){
+	alert("연결");
+}	
+}
