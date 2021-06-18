@@ -1,0 +1,108 @@
+<%@ page language ="java" contentType = "text/html; charset = UTF-8"
+pageEncoding ="UTF-8" %>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>회원가입</title>
+    <script src="js/js.js"></script>
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body onload="isDupCheck('${message }', '${uCode }')">
+    <div id="accesszone">
+      <div class="title">Join Page</div>
+      <div class="inputzone">
+        <div id="general" class="choiceOn" onClick="joinType(this)">
+          General
+        </div>
+        <div id="restaurant" class="choiceOff" onClick="joinType(this)">
+          Restaurant
+        </div>
+        <input type="hidden" name="accessType" value="G" />
+      </div>
+      <div class="inputzone">
+        <div id="uCode" class="item">User Code</div>
+        <div id="uInput" class="content">
+          <input
+            type="text"
+            name="uCode"
+            class="box"
+            placeholder="Your Id"
+            onKeyUp="korCheck(this, event)"
+          />
+        </div>
+      </div>
+      <div class="inputzone">
+        <div class="content">${mes }</div>
+        <div class="content">
+          <div></div>
+          <input
+            id="dupBtn"
+            type="button"
+            class="box"
+            value="중복검사"
+            onMouseOver="btnCss(this, true)"
+            onMouseOut="btnCss(this, false)"
+            onClick="dupCheck(this)"
+          />
+        </div>
+      </div>
+      <div class="inputzone">
+        <div class="item">Access Code</div>
+        <div class="content">
+          <input
+            type="password"
+            name="aCode"
+            class="box"
+            placeholder="Your Password"
+          />
+        </div>
+        <div class="item">Code Confirm</div>
+        <div class="content">
+          <input
+            type="password"
+            name="aCode"
+            class="box"
+            placeholder="Your Password"
+          />
+        </div>
+      </div>
+      <div class="inputzone">
+        <div id="uName" class="item">User Name</div>
+        <div class="content">
+          <input type="text" name="uName" class="box" placeholder="Your Name" />
+        </div>
+      </div>
+      <div class="inputzone">
+        <div id="uEtc" class="item">User Phone</div>
+        <div class="content">
+          <input
+            type="text"
+            name="uPhone"
+            class="box"
+            placeholder="Your Phone"
+          />
+        </div>
+      </div>
+      <!--  레스토랑 가입시 -->
+      <div id="sel" class="inputzone" style="display: none">
+        <div class="content">
+          <select name="rType" class="box">
+            <option>분류선택</option>
+            <option>한식</option>
+          </select>
+        </div>
+        <div class="content">
+          <select name="location" class="box">
+            <option>지역선택</option>
+            <option>인천</option>
+          </select>
+        </div>
+      </div>
+      <div class="title" onClick="sendJoinInfo()" id="sendJoinInfo">
+        Submit<a href="//192.168.1.190/access.jsp">로그인 페이지로 이동</a>
+      </div>
+    </div>
+  </body>
+</html>
