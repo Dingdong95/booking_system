@@ -16,7 +16,7 @@ public class Authentication {
 
 	}
 
-	public void backController(int ServiceCode, HttpServletRequest req) {
+	public Action backController(int ServiceCode, HttpServletRequest req) {
 		
 		switch(ServiceCode) {
 		case 1: // 로그인
@@ -32,7 +32,7 @@ public class Authentication {
 			this.joinCtl(req);
 			break;
 		}
-		
+		return action;
 	}
 	
 	private void logOutCtl(HttpServletRequest req) {
@@ -70,7 +70,7 @@ public class Authentication {
 				member.setMemberPassword(null);
 				this.getUserInfo();
 				req.setAttribute("info", this.member);
-				action.setPage((member.getAccessType().equals("G"))? "cMain.jsp" : "rMain.jsp");				
+				action.setPage((member.getAccessType().equals("G"))? "cMain.jsp" : "DashBoard.jsp");				
 			}else {
 				req.setAttribute("message", message);
 			}

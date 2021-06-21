@@ -1,23 +1,19 @@
 package beans;
-
 /* 개발 규칙
  *  - 생성자를 별도로 생성하지 않습니다. --> X
  *  - 저장소인 변수는 필드화 한다.
  *  - 필드는 반드시 외부 접근이 불가능 하도록 private으로 선언한다.
  *  - 하나의 필드에 접근할 수 있는 setter method와 getter method를 생성할 수 있다.
  * */
-
 public class Member {
-	public Member() {}
-	
-	private String memberId;
-	private String memberPwd;
-	private String memberName;
-	private String memberEtc;
+	private String accessType;
+	private String memberId;   // cu_id, re_code
+	private String memberPassword;
+	private String memberName; // CU_NAME, RE_NAME
+	private String memberEtc;  // userPhone, CEOName
 	private String categoryCode;
 	private String category;
 	private String location;
-	private String accessType;
 	
 	
 	public String getAccessType() {
@@ -32,11 +28,11 @@ public class Member {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	public String getMemberPwd() {
-		return memberPwd;
+	public String getMemberPassword() {
+		return memberPassword;
 	}
-	public void setMemberPwd(String memberPwd) {
-		this.memberPwd = memberPwd;
+	public void setMemberPassword(String memberPassword) {
+		this.memberPassword = memberPassword;
 	}
 	public String getMemberName() {
 		return memberName;

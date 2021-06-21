@@ -11,13 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import auth.services.Authentication;
 import beans.Action;
+import search.service.RestaurantService;
 import search.service.Search;
 
-@WebServlet({"/LogIn", "/DupCheck", "/Join", "/LogOut", "/JoinForm", "/LogInForm", "/Search"})
+@WebServlet({"/LogIn", "/DupCheck", "/Join", "/LogOut", "/JoinForm", "/LogInForm", "/Search", "/Waiting", "/TodayReserved", "/DashBoard", "/ConfirmReserve"})
 public class FrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Authentication auth;
 	private Search search;
+	private RestaurantService rService;
+	
     public FrontController() {
         super();
     }
@@ -77,6 +80,18 @@ public class FrontController extends HttpServlet {
 		}else if(jobCode.equals("LogOut")) {
 			auth = new Authentication();
 			action =auth.backController(-1, request);
+		}else if (jobCode.equals("DashBoard")) {
+			rService = new RestaurantService();
+			action = rService.backController(1, request);
+		}else if  (jobCode.equals("Waiting")){
+			rService = new RestaurantService();
+			action = rService.backController(2, request);
+		}else if(jobCode.equals("TodayReserved")) {
+			rService = new RestaurantService();
+			action = rService.backController(3, request);
+		}else if(jobCode.equals("ConfirmReserve")) {
+			rService = new RestaurantService();
+			action = rService.backController(4, request);
 		}else {
 			
 		}

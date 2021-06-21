@@ -7,12 +7,9 @@
 <title>Restaurant Main</title>
 </head>
 <body>
-	<h1>${info.memberId }</h1>
-	<h1>${info.memberName }</h1>
-	<h1>${info.memberEtc }</h1>
-	<h1>${info.categoryCode }</h1>
-	<h1>${info.category }</h1>
-	<h1>${info.location }</h1>
-	<h1>${sessionScope.access }</h1>
+<input class = "res_Check_Btn" type ="button" placeholder = "예약 대기자 현황" onClick ="showDiv(0)" >
+<input class = "res_Check_Btn"  type = "button" placeholder = "금일 예약자 현황" onClick ="showDiv(1)">
+<div>${watingList }</div>
+<div>${todayList }</div>
 </body>
 </html>
