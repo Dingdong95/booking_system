@@ -1,27 +1,20 @@
 package auth.services;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import beans.Member;
 
 class DataAccessObject extends controller.DataAccessObject {
 	
-	
-	public DataAccessObject() {
+	DataAccessObject() {
 		super();
 	}
 
-	/*Process 1 ~ Process 2*/
-	
 	
 	/* 아이디 존재 여부 */
 	int isUserId(Member member) {
 		int result = 0;
-		String query = "SELECT COUNT(*) AS ISID FROM TB_CON WHERE CON_ID = ?";
+		String query = "SELECT COUNT(*) AS ISID FROM CU WHERE CU_ID = ?";
 				
 		try {
 			pstmt = connection.prepareStatement(query);
@@ -40,7 +33,7 @@ class DataAccessObject extends controller.DataAccessObject {
 	
 	int isRestaurantCode(Member member) {
 		int result = 0;
-		String query = "SELECT COUNT(*) AS ISID FROM TB_ST WHERE ST_CODE = ?";
+		String query = "SELECT COUNT(*) AS ISID FROM RE WHERE RE_CODE = ?";
 				
 		try {
 			pstmt = connection.prepareStatement(query);
@@ -60,7 +53,7 @@ class DataAccessObject extends controller.DataAccessObject {
 	/* 아이디 패스워드 일치 여부 */
 	int isAccess(Member member) {
 		int result = 0;
-		String query = "SELECT COUNT(*) AS ISUSER FROM TB_CON WHERE CON_ID = ? AND CON_PASSWORD = ?";
+		String query = "SELECT COUNT(*) AS ISUSER FROM CU WHERE CU_ID = ? AND CU_PASSWORD = ?";
 		try {
 			pstmt = connection.prepareStatement(query);
 			pstmt.setNString(1, member.getMemberId());
@@ -78,7 +71,7 @@ class DataAccessObject extends controller.DataAccessObject {
 	
 	int isRestaurantAccess(Member member) {
 		int result = 0;
-		String query = "SELECT COUNT(*) AS ISUSER FROM TB_ST WHERE ST_CODE = ? AND ST_ACCESS = ?";
+		String query = "SELECT COUNT(*) AS ISUSER FROM RE WHERE RE_CODE = ? AND RE_ACCESS = ?";
 		try {
 			pstmt = connection.prepareStatement(query);
 			pstmt.setNString(1, member.getMemberId());
@@ -95,8 +88,7 @@ class DataAccessObject extends controller.DataAccessObject {
 	}
 	/* 로그인된 사용자 정보 가져오기*/
 	void getUserInfo(Member member) {
-		String result = null;
-		String query = "SELECT CON_NAME AS CUNAME FROM TB_CON WHERE CON_ID = ?";
+		String query = "SELECT CU_NAME AS CUNAME FROM CU WHERE CU_ID = ?";
 		try {
 			pstmt = connection.prepareStatement(query);
 			pstmt.setNString(1, member.getMemberId());
@@ -131,7 +123,7 @@ class DataAccessObject extends controller.DataAccessObject {
 	
 	int setNewMember(Member member) {
 		int result = 0;
-		String query = member.getMemberEtc() != null? "INSERT INTO TB_CON(CON_ID, CON_PASSWORD, CON__NAME, CON__PHONE) VALUES(?, ?, ?, ?)": "INSERT INTO TB_CON_(CON__ID, CON__PASSWORD, CON__NAME, CON__PHONE) VALUES(?, ?, ?, DEFAULT)";
+		String query = member.getMemberEtc() != null? "INSERT INTO CU(CU_ID, CU_PASSWORD, CU_NAME, CU_PHONE) VALUES(?, ?, ?, ?)": "INSERT INTO CU(CU_ID, CU_PASSWORD, CU_NAME, CU_PHONE) VALUES(?, ?, ?, DEFAULT)";
 		
 		try {
 			pstmt = connection.prepareStatement(query);
@@ -152,7 +144,7 @@ class DataAccessObject extends controller.DataAccessObject {
 	
 	int setNewRestaurantMember(Member member) {
 		int result = 0;
-		String query = "INSERT INTO TB_ST(ST_CODE, ST_NAME, ST_CEO, ST_LOC, ST_CAT, RE_ACCESS) "
+		String query = "INSERT INTO RE(RE_CODE, RE_NAME, RE_CEO, RE_CATE, RE_ACCESS, RE_LOCATE) "
 				+ "VALUES(?, ?, ?, ?, ?, ?)"; 
 		
 		try {

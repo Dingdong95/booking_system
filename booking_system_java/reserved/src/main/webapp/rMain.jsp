@@ -5,11 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Restaurant Main</title>
+<script src="js/js.js"></script>
+<link href="css/style.css" type="text/css" rel="stylesheet" />
 </head>
-<body>
-<input class = "res_Check_Btn" type ="button" placeholder = "예약 대기자 현황" onClick ="showDiv(0)" >
-<input class = "res_Check_Btn"  type = "button" placeholder = "금일 예약자 현황" onClick ="showDiv(1)">
-<div>${watingList }</div>
-<div>${todayList }</div>
+<body onLoad="rMain_init('${message}')">
+	${WaitingList }
+	${TodayReservedList }
 </body>
 </html>

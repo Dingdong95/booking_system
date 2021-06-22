@@ -61,6 +61,6 @@
 		</div>	
 		<div class="title" onClick="sendJoinInfo()">Submit</div>
 	</div>
-	<div style="text-align:center"><a href="http://192.168.1.190/LogInForm">로그인</a></div>
+	<div style="text-align:center"><a href="http://localHost/LogInForm">로그인</a></div>
 </body>
 </html>

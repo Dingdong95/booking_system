@@ -7,8 +7,8 @@ import beans.Action;
 import beans.Member;
 
 public class Authentication {
-	private Member member;
 	private Action action;
+	private Member member;
 	private DataAccessObject dao;
 	private HttpSession session;
 
@@ -17,7 +17,7 @@ public class Authentication {
 	}
 
 	public Action backController(int ServiceCode, HttpServletRequest req) {
-		
+
 		switch(ServiceCode) {
 		case 1: // 로그인
 			this.logInCtl(req);
@@ -34,21 +34,21 @@ public class Authentication {
 		}
 		return action;
 	}
-	
+
 	private void logOutCtl(HttpServletRequest req) {
 		action = new Action();
-		action.setPage("access.jsp");
-		
+
 		HttpSession session = req.getSession();
 		session.invalidate();
-		
-		
+		action.setPage("access.jsp");
+		action.setRedirect(true);
 	}
-
+	
 	private void logInCtl(HttpServletRequest req) {
 		action = new Action();
 		action.setPage("access.jsp");
 		action.setRedirect(false);
+		
 		String message = "아이디나 패스워드를 확인해 주세요!";
 
 		// bean에 데이터 저장 :: Member Bean
@@ -69,8 +69,9 @@ public class Authentication {
 				
 				member.setMemberPassword(null);
 				this.getUserInfo();
-				req.setAttribute("info", this.member);
-				action.setPage((member.getAccessType().equals("G"))? "cMain.jsp" : "DashBoard.jsp");				
+				req.setAttribute("info", member.getMemberId());
+				req.setAttribute("userName", member.getMemberName());
+				action.setPage((member.getAccessType().equals("G"))? "cMain.jsp" : "DashBoard");				
 			}else {
 				req.setAttribute("message", message);
 			}
@@ -79,8 +80,8 @@ public class Authentication {
 		}
 		
 		dao.dbClose();
-		
 	}
+	
 	private boolean isUserId() {
 		return this.convertData(member.getAccessType().equals("G")? this.dao.isUserId(member) : this.dao.isRestaurantCode(member));
 	}
@@ -99,13 +100,12 @@ public class Authentication {
 		return (data==1)? true: false; 
 	}
 
-	
-
 	private void dupCheckCtl(HttpServletRequest req) {
 		action = new Action();
 		action.setPage("join.jsp");
 		action.setRedirect(false);
 		String message = "사용 불가능한 아이디입니다.";
+		
 		dao = new DataAccessObject();
 		dao.dbOpen();
 
@@ -123,13 +123,13 @@ public class Authentication {
 
 		dao.dbClose();
 		req.setAttribute("message", message);
-		
 	}
 
 	private void joinCtl(HttpServletRequest req) {
 		action = new Action();
 		action.setPage("join.jsp");
 		action.setRedirect(false);
+		
 		// Memeber Bean에 Client로부터 전송된 데이터 담기
 		member = new Member();
 		member.setAccessType(req.getParameter("accessType"));
@@ -147,12 +147,10 @@ public class Authentication {
 		dao.dbOpen();
 		// setNewMember() << 일반 회원 가입
 		if(this.setNewMember()) {
-			action.setPage("join.jsp");
+			action.setPage("access.jsp");
 			action.setRedirect(true);
 		}
 		dao.dbClose();
-
-		
 	}
 
 	private boolean setNewMember() {

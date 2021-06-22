@@ -1,12 +1,8 @@
-/**
- * 
- */
-
 function callType(object){
 	// Click된 Div의 선택(색상 바꾸기):: default: #F6F6F6 << bg >> #FFBB00
 	// general  restaurant
-	var accessType = document.getElementsByName("accessType")[0];
-	var objectId;
+	let accessType = document.getElementsByName("accessType")[0];
+	let objectId;
 	if(object.id == "general"){
 		objectId = "restaurant";
 		accessType.value = "G";
@@ -22,9 +18,9 @@ function callType(object){
 
 /* 회원가입 유형에 따른 CSS */
 function joinType(object){
-	var accessType = document.getElementsByName("accessType")[0];
+	let accessType = document.getElementsByName("accessType")[0];
 	
-	var objectId;
+	let objectId;
 	if(object.id == "general"){
 		objectId = "restaurant";
 		accessType.value = "G";
@@ -56,9 +52,9 @@ function joinType(object){
 }
 
 function isIdCheck(word, type){
-	var cuComp = /^[a-z]{1}[a-z0-9]{4,11}$/;
-	var reComp = /^[A-Z]{1}[0-9]{9}$/;
-	var result;
+	const cuComp = /^[A-Z]{1}[A-Z0-9]{4,9}$/;
+	const reComp = /^[0-9]{10}$/;
+	let result;
 
 	if(type){
 		result = cuComp.test(word);
@@ -70,13 +66,13 @@ function isIdCheck(word, type){
 }
 
 function isPasswordCheck(word){
-	var sEng = /[a-z]/;
-	var bEng = /[A-Z]/;
-	var num = /[0-9]/;
-	var special = /[!@#$%^&*]/; 
+	const sEng = /[a-z]/;
+	const bEng = /[A-Z]/;
+	const num = /[0-9]/;
+	const special = /[!@#$%^&*]/; 
 	
 	// password가 영문소문자, 영문대문자, 숫자, 특수문자 중 3가지 이상의 문자군을 사용했는지 여부
-	var count = 0;
+	let count = 0;
 	if(sEng.test(word)){	count++; }
 	if(bEng.test(word)){	count++; }
 	if(num.test(word)){	count++; }	
@@ -91,9 +87,9 @@ function charCount(word, min, max){
 
 function sendAccessInfo(){
 	// html 객체 연결 : id, password
-	var id = document.getElementsByName("uCode")[0];
-	var password = document.getElementsByName("aCode")[0];
-	var accessType = document.getElementsByName("accessType")[0];
+	let id = document.getElementsByName("uCode")[0];
+	let password = document.getElementsByName("aCode")[0];
+	let accessType = document.getElementsByName("accessType")[0];
 	// id가 영어소문자로 시작하고 숫자를 포함할 수 있으면서 전체 길이는 5~10
 	
 	if(accessType.value == "G"){
@@ -124,7 +120,7 @@ function sendAccessInfo(){
 	}
 	
 	// form 객체 생성
-	var f = document.createElement("form");
+	let f = document.createElement("form");
 	f.method = "post"; //f.setAttribute("method", "post");
 	f.action = "LogIn";
 	// id와 password를 form자식으로 입양
@@ -138,7 +134,7 @@ function sendAccessInfo(){
 }
 
 function korCheck(obj, event){
-	var pattern = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+	const pattern = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
 	
 	if(pattern.test(event.target.value.trim())) {
 		obj.value = obj.value.replace(pattern,'').trim();
@@ -151,8 +147,8 @@ function btnCss(object, state){
 }
 
 function dupCheck(obj){
-	var uCode = document.getElementsByName("uCode")[0];
-	var accessType = document.getElementsByName("accessType")[0];
+	let uCode = document.getElementsByName("uCode")[0];
+	let accessType = document.getElementsByName("accessType")[0];
 	
 	if(obj.value != "재입력"){
 		// 아이디 유효성 검사
@@ -170,7 +166,7 @@ function dupCheck(obj){
 			}
 		}
 		
-		var f = document.createElement("form");
+		let f = document.createElement("form");
 		f.method = "post"; 
 		f.action = "DupCheck";
 		
@@ -188,16 +184,16 @@ function dupCheck(obj){
 
 function sendJoinInfo(){
 	// HTML Object 연결
-	var uCode = document.getElementsByName("uCode")[0];
-	var aCode = document.getElementsByName("aCode");
-	var uName = document.getElementsByName("uName")[0];
-	var uPhone = document.getElementsByName("uPhone")[0];
-	var accessType = document.getElementsByName("accessType")[0];
+	let uCode = document.getElementsByName("uCode")[0];
+	let aCode = document.getElementsByName("aCode");
+	let uName = document.getElementsByName("uName")[0];
+	let uPhone = document.getElementsByName("uPhone")[0];
+	let accessType = document.getElementsByName("accessType")[0];
 	
 	/* Restaurant 가입 시*/
 	if(accessType.value == "R"){
-		var location = document.getElementsByName("location")[0];
-		var rType = document.getElementsByName("rType")[0];
+		let location = document.getElementsByName("location")[0];
+		let rType = document.getElementsByName("rType")[0];
 	}
 	
 	// 패스워드 유효성 체크 // 패스워드 일치여부 체크
@@ -226,7 +222,7 @@ function sendJoinInfo(){
 	}
 	
 	// form 생성
-	var f = document.createElement("form");
+	let f = document.createElement("form");
 	f.method = "post";
 	f.action = "Join";
 	// 아이디, 패스워드, 사용자명, 사용자전화번호 를 form의 자식으로 편입
@@ -246,10 +242,10 @@ function sendJoinInfo(){
 }
 
 function isDupCheck(message, userId){
-	var uCode = document.getElementsByName("uCode")[0];
-	var dupBtn = document.getElementById("dupBtn");
+	let uCode = document.getElementsByName("uCode")[0];
+	let dupBtn = document.getElementById("dupBtn");
 	if(message != ""){
-		var result = confirm(message + "사용하시겠습니까?");
+		let result = confirm(message + "사용하시겠습니까?");
 		if(result){
 			uCode.value = userId;
 			uCode.readOnly = true;
@@ -264,47 +260,152 @@ function callMessage(message){
 	}
 }
 
-function search() {
-	let searchWord = document.getElementsByName("word")[0];
-	if(searchWord == ""){
-		alert("검색어 입력");
-		searchWord.focus();
+function search(){
+	// HTML Object 연결 getElementsByName("word")[0]
+	let word = document.getElementsByName("word")[0];
+	let uCode = document.getElementsByName("uCode")[0];
+	// 검색어 입력 여부 확인
+	if(word.value == ""){ 
+		alert("검색어를 입력해주세요");
+		word.focus();
 		return;
 	}
-	let form = document.createElement("form");
 	
-	form.method = "get";
-	form.action = "Search";
-	form.appendChild(searchWord);
-	document.body.appendChild(form);
+	// Form 개체 생성  >> method:GET  action:Search
+	let f = document.createElement("form");
+	f.method = "get";
+	f.action = "Search";
 	
-	form.submit();
-	
+	// Form 개체 : HTML Object를 자식으로 편성
+	f.appendChild(uCode);
+	f.appendChild(word);
+	// Form 개체 : body의 자식으로 편성
+	document.body.appendChild(f);
+	// Form 전송
+	f.submit();
 }
 
-function reserve(){
+function reserve(index){
+	let rCode = document.getElementsByName("rCode")[index];
+	let uCode = document.getElementsByName("uCode")[0];
+	
+	let f = document.createElement("form");
+	f.action = "ReserveDate";
+	f.method = "get";
+ 	f.appendChild(rCode);
+	f.appendChild(uCode);
+	document.body.appendChild(f);
+	f.submit();
+}
+function resDate(index){
+	let rDate = document.getElementsByName("rDate")[index];
 	let rCode = document.getElementsByName("rCode")[0];
-	alert(rCode);
+	let uCode = document.getElementsByName("uCode")[0];
+	
+let f = document.createElement("form");
+f.action = "MenuChart";
+f.method = "get";	
+f.appendChild(rDate);
+f.appendChild(rCode);
+f.appendChild(uCode);
+
+document.body.appendChild(f);
+f.submit();
+	
+	
 }
 
-function selectRestaurant(reCode, conCode, reDate, mCode){
-//alert((mCode !=null)? reCode +":" + conCode +":" + reDate +":" + mCode : reCode +":" + conCode +":" + reDate)
-let check = confirm("예약 하시겠습니까?");
-if(!confirm){return}
+/*
+function showQty(index){
+let qty = document.getElementsByName("QTY")[index];
+	if(qty.className == 'off'){
+	qty.className= 'on';
+	qty.type="number";
+}else{
+	qty.className='off';
+	qty.type="hidden";
+}
+*/
 
 
+/*
+if(qty.type == 'hidden'){
+	qty.type= 'number';
+	
+}else{
+	qty.type='hidden';
+}
+*/
+
+
+function menuSelect(index){
+//let checkOut = document.getElementsName("checkOutBtn");
+let rCode = document.getElementsByName("rCode")[0];
+let uCode = document.getElementsByName("uCode")[0];
+let rDate = document.getElementsByName("rDate")[0];
+let meCode = document.getElementsByName("meCode")[index];
+let checkbox = document.getElementsByName("checkbox"); 
+let qty = document.getElementsByName("QTY");
+let menuList;
+
+for(i = 0; i<qty.length; i++){
+	
+	//arr[i] = arr[rCode,uCode,rDate,meCode,qty];
+	if(checkbox[i].checked== true){
+		if(qty[i].value == ""){
+			return;
+		}
+		menuList= (menuList==null)?checkbox[i].value+","+qty[i].value: menuList+":"+checkbox[i].value+","+qty[i].value;
+	}
+}
 
 let form = document.createElement("form");
-form.action = "ConfirmReserve";
-form.method = "post";
+form.appendChild(makeInput("hidden","menuList",menuList));
+form.appendChild(uCode);
+form.appendChild(rCode);
+form.appendChild(rDate);
 
-form.appendChild(this.makeInput("hidden","reCode",reCode));
-form.appendChild(this.makeInput("hidden","conCode",conCode));
-form.appendChild(this.makeInput("hidden","dbDate",reDate));
+form.action = "MenuList";
+form.method = "get";
 
 document.body.appendChild(form);
 form.submit();
 
+
+	
+
+}
+
+
+
+function rMain_init(message){
+	if(message != "") alert(message);
+	let list = document.getElementsByName("list");
+	list[1].style.display = "none";
+	
+}
+
+function selectRestaurant(cate, reCode, cuCode, reDate, mCode){
+	if(cate){
+		let check = confirm("예약을 확정하시겠습니까?");
+		if(!check) return;
+	
+		// input 개체 생성
+		// form 생성
+		let f = document.createElement("form");
+		f.action = "ConfirmReserve";
+		f.method = "post";
+	
+		f.appendChild(makeInput("hidden", "reCode", reCode));
+		f.appendChild(makeInput("hidden", "cuCode", cuCode));
+		f.appendChild(makeInput("hidden", "dbDate", reDate));
+	
+		document.body.appendChild(f);
+	
+		f.submit();
+	}else{
+		alert("금일예약현황");
+	}
 }
 
 function makeInput(type, name, value){
@@ -319,24 +420,30 @@ function makeInput(type, name, value){
 function showDiv(index){
 	let list = document.getElementsByName("list");
 	
-	
-	if(index ==0){
+	if(index){
 		list[0].style.display = "block";
 		list[1].style.display = "none";
 	}else{
 		list[0].style.display = "none";
 		list[1].style.display = "block";
 	}
+	
 }
 
 
-/*예약확정 프로세스
-is-confirm() > 확인: true 취소: false
-if true
-* recode,concode,redate 전송
-1. reCode, conCode, reDate 담을 input 생성 
-2. form > action: confirmReserve, method: post 
-3. input개체를 form의 자식으로 편입
-4. form을 body에 편입
-5. form.submit 
- *//
+
+
+
+
+/* 예약확정 프로세스
+	js - confirm() >> 확인 : true    취소 : false
+	  true_______
+    * reCode, cuCode, reDate 데이터를 서버 전송
+      1. reCode, cuCode, reDate를 담을 input개체 생성
+			2. form 생성 >> action : ConfirmReserve, method : post
+			3. input개체를 form의 자식으로 편입
+			4. form을 body의 자식으로 편입
+			5. 전송
+       
+
+*/

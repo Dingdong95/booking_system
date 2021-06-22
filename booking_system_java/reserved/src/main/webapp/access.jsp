@@ -27,7 +27,7 @@
 		<div class="title" onClick="sendAccessInfo()">Submit</div>
 	</div>
 	<div style="text-align:center">아이디 분실 | 비밀번호 분실 | 
-		<a href="http://192.168.1.190/JoinForm">회원가입</a>
+		<a href="http://localHost/JoinForm">회원가입</a>
 	</div>
 </body>
 </html>

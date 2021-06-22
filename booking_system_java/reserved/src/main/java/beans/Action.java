@@ -2,7 +2,8 @@ package beans;
 
 public class Action {
 	private String page;
-	private boolean isRedirect; //response: true //dispatcher: false 
+	private boolean isRedirect;  // response : true    dispatcher : false
+	
 	public String getPage() {
 		return page;
 	}
