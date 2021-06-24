@@ -1,7 +1,19 @@
-/* JSP 내장 객체 */
-scope = life-cycle
-1. application  : Server를 운영하는데 필요한 환경을 저장
-2. session			: Browser로 서버에 최초 요청시 생성 --> 클라이언트와 요청과 무관하게 데이터 저장 가능
-3. request + response
-								: Client 요청시 생성이되고 서버가 응답을 할 때까지 유효
-4. page-context : reqeust response  --> 해당 페이지의 정보
+/* SEMI PLZEC */
+cMain.jsp :: 검색결과 리스트
+
+TEAM MEMBER1 : 예약가능 날짜 리스트 출력 (내일 부터 7일 까지)
+ :: cStep1.jsp   >> war file 전송 :: team?_member1.war
+TEAM MEMBER2 : 해당 레스토랑의 메뉴 출력
+ :: cStep2.jsp
+TEAM MEMBER3 : 메뉴를 선택하고 os와 od에 데이터를 입력 >> 선택한 메뉴를 출력  OS 'B'
+ :: cStep3.jsp
+TEAM MEMBER4 : 예약내용을 확인 -- 'B' --> 'W'
+ :: cStep4.jsp
+ 
+TEAM MEMBER : 레스토랑으로 로그인 --> 예약 대기 리스트에서 특정 예약을 확정
+
+TEAM MEMBER : 일반사용자로 로그인 한 후 예약 확정사항을 출력
+ :: cMain.jsp
+
+ 
+ 

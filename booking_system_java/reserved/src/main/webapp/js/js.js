@@ -263,7 +263,6 @@ function callMessage(message){
 function search(){
 	// HTML Object 연결 getElementsByName("word")[0]
 	let word = document.getElementsByName("word")[0];
-	let uCode = document.getElementsByName("uCode")[0];
 	// 검색어 입력 여부 확인
 	if(word.value == ""){ 
 		alert("검색어를 입력해주세요");
@@ -277,7 +276,6 @@ function search(){
 	f.action = "Search";
 	
 	// Form 개체 : HTML Object를 자식으로 편성
-	f.appendChild(uCode);
 	f.appendChild(word);
 	// Form 개체 : body의 자식으로 편성
 	document.body.appendChild(f);
@@ -285,98 +283,17 @@ function search(){
 	f.submit();
 }
 
-function reserve(index){
-	let rCode = document.getElementsByName("rCode")[index];
-	let uCode = document.getElementsByName("uCode")[0];
-	
+/* 예약 */
+function reserve(rCode){
+	let reCode = makeInput("text", "reCode", rCode)
 	let f = document.createElement("form");
-	f.action = "ReserveDate";
-	f.method = "get";
- 	f.appendChild(rCode);
-	f.appendChild(uCode);
+	f.action = "Reserve";
+	f.method = "post";
+	f.appendChild(reCode);
+	
 	document.body.appendChild(f);
 	f.submit();
 }
-function resDate(index){
-	let rDate = document.getElementsByName("rDate")[index];
-	let rCode = document.getElementsByName("rCode")[0];
-	let uCode = document.getElementsByName("uCode")[0];
-	
-let f = document.createElement("form");
-f.action = "MenuChart";
-f.method = "get";	
-f.appendChild(rDate);
-f.appendChild(rCode);
-f.appendChild(uCode);
-
-document.body.appendChild(f);
-f.submit();
-	
-	
-}
-
-/*
-function showQty(index){
-let qty = document.getElementsByName("QTY")[index];
-	if(qty.className == 'off'){
-	qty.className= 'on';
-	qty.type="number";
-}else{
-	qty.className='off';
-	qty.type="hidden";
-}
-*/
-
-
-/*
-if(qty.type == 'hidden'){
-	qty.type= 'number';
-	
-}else{
-	qty.type='hidden';
-}
-*/
-
-
-function menuSelect(index){
-//let checkOut = document.getElementsName("checkOutBtn");
-let rCode = document.getElementsByName("rCode")[0];
-let uCode = document.getElementsByName("uCode")[0];
-let rDate = document.getElementsByName("rDate")[0];
-let meCode = document.getElementsByName("meCode")[index];
-let checkbox = document.getElementsByName("checkbox"); 
-let qty = document.getElementsByName("QTY");
-let menuList;
-
-for(i = 0; i<qty.length; i++){
-	
-	//arr[i] = arr[rCode,uCode,rDate,meCode,qty];
-	if(checkbox[i].checked== true){
-		if(qty[i].value == ""){
-			return;
-		}
-		menuList= (menuList==null)?checkbox[i].value+","+qty[i].value: menuList+":"+checkbox[i].value+","+qty[i].value;
-	}
-}
-
-let form = document.createElement("form");
-form.appendChild(makeInput("hidden","menuList",menuList));
-form.appendChild(uCode);
-form.appendChild(rCode);
-form.appendChild(rDate);
-
-form.action = "MenuList";
-form.method = "get";
-
-document.body.appendChild(form);
-form.submit();
-
-
-	
-
-}
-
-
 
 function rMain_init(message){
 	if(message != "") alert(message);
@@ -430,20 +347,27 @@ function showDiv(index){
 	
 }
 
+function trOver(comments, obj){
+	obj.className = "mouseOver";
+}
+function trOut(obj){
+	obj.className = "mouseOut";
+}
 
+function callMenu(reCode, day){
+	// step1 
+	let ajax = new XMLHttpRequest();
+	// step2 
+	ajax.onreadystatechange = function(){
+		if(ajax.readyState == 4 && ajax.status == 200){
+		//step 5 
+		alert(ajax.responseText);	
+		}
+	}
+	// step3 
+	ajax.open("GET","Step2?reCode="+reCode+"&date="+day,true);
+	//step 4
+	ajax.send();
+	
+}
 
-
-
-
-/* 예약확정 프로세스
-	js - confirm() >> 확인 : true    취소 : false
-	  true_______
-    * reCode, cuCode, reDate 데이터를 서버 전송
-      1. reCode, cuCode, reDate를 담을 input개체 생성
-			2. form 생성 >> action : ConfirmReserve, method : post
-			3. input개체를 form의 자식으로 편입
-			4. form을 body의 자식으로 편입
-			5. 전송
-       
-
-*/

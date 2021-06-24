@@ -8,21 +8,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import auth.services.Authentication;
 import beans.Action;
-import jobs.reserve.Reserve;
 import jobs.services.RestaurantService;
-import jobs.services.Search;
+import jobs.services.UserService;
 
-@WebServlet({"/LogIn", "/DupCheck", "/Join", "/LogOut", "/JoinForm", "/LogInForm", "/Search", "/ReserveDate",
-	"/DashBoard", "/Waiting", "/TodayReserved", "/ConfirmReserve", "/MenuChart", "/MenuList"})
+@WebServlet({"/LogIn", "/DupCheck", "/Join", "/LogOut", "/JoinForm", "/LogInForm", "/Search", "/DashBoard", "/Waiting", "/TodayReserved", "/ConfirmReserve", "/Reserve"})
 public class FrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Authentication auth;
-	private Search search;
+	private UserService user;
 	private RestaurantService rService;
-	private Reserve reserve;
 	
     public FrontController() {
         super();
@@ -42,19 +40,9 @@ public class FrontController extends HttpServlet {
 			action.setPage("access.jsp");
 			action.setRedirect(true);
 		}else if(jobCode.equals("Search")) {
-			search = new Search(); 
-			action = search.backController(1, request);	
-		}else if(jobCode.equals("ReserveDate")) {
-			search = new Search();
-			action = search.backController(2, request);
-		}else if(jobCode.equals("MenuChart")) {
-			search = new Search();
-			action = search.backController(3, request);
-		}else if (jobCode.equals("MenuList")) {
-			reserve = new Reserve();
-			action = reserve.controller(1,request);
-		}
-		else{
+			user = new UserService(); 
+			action = user.backController(1, request);
+		}else{
 			action = new Action();
 			action.setPage("index.html");
 			action.setRedirect(true);
@@ -96,6 +84,9 @@ public class FrontController extends HttpServlet {
 		}else if(jobCode.equals("TodayReserved")){
 			rService = new RestaurantService();
 			action = rService.backController(3, request);
+		}else if(jobCode.equals("Reserve")){
+			user = new UserService();
+			action = user.backController(2, request);
 		}else if(jobCode.equals("ConfirmReserve")){
 			rService = new RestaurantService();
 			action = rService.backController(4, request);

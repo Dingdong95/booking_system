@@ -65,12 +65,11 @@ public class Authentication {
 				// history table >> 로그인 정보 저장
 				// HttpSession 처리
 				session = req.getSession(true);
-				session.setAttribute("access", true);
+				session.setAttribute("user", member.getMemberId());
 				
 				member.setMemberPassword(null);
 				this.getUserInfo();
-				req.setAttribute("info", member.getMemberId());
-				req.setAttribute("userName", member.getMemberName());
+				req.setAttribute("info", this.member);
 				action.setPage((member.getAccessType().equals("G"))? "cMain.jsp" : "DashBoard");				
 			}else {
 				req.setAttribute("message", message);
