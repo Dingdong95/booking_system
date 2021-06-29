@@ -15,7 +15,7 @@ import beans.Action;
 import jobs.services.RestaurantService;
 import jobs.services.UserService;
 
-@WebServlet({"/LogIn", "/DupCheck", "/Join", "/LogOut", "/JoinForm", "/LogInForm", "/Search", "/DashBoard", "/Waiting", "/TodayReserved", "/ConfirmReserve", "/Reserve"})
+@WebServlet({"/LogIn", "/DupCheck", "/Join", "/LogOut", "/JoinForm", "/LogInForm", "/Search", "/DashBoard", "/Waiting", "/TodayReserved", "/ConfirmReserve", "/Reserve","/Orders"})
 public class FrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Authentication auth;
@@ -87,9 +87,16 @@ public class FrontController extends HttpServlet {
 		}else if(jobCode.equals("Reserve")){
 			user = new UserService();
 			action = user.backController(2, request);
+		}else if(jobCode.equals("Orders")){
+			user = new UserService();
+			action = user.backController(3, request);
 		}else if(jobCode.equals("ConfirmReserve")){
 			rService = new RestaurantService();
 			action = rService.backController(4, request);
+		}else if(jobCode.equals("Search")) {
+			System.out.println("여기 search");
+			user = new UserService(); 
+			action = user.backController(1, request);
 		}else {}
 		
 		if(action.isRedirect()) {

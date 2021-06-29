@@ -45,6 +45,7 @@ public class Authentication {
 	}
 	
 	private void logInCtl(HttpServletRequest req) {
+		System.out.println("여기 loginctl");
 		action = new Action();
 		action.setPage("access.jsp");
 		action.setRedirect(false);
@@ -70,7 +71,8 @@ public class Authentication {
 				member.setMemberPassword(null);
 				this.getUserInfo();
 				req.setAttribute("info", this.member);
-				action.setPage((member.getAccessType().equals("G"))? "cMain.jsp" : "DashBoard");				
+				action.setPage((member.getAccessType().equals("G"))? "Search" : "DashBoard");
+				System.out.println("여기 search로 바꿈"+ action.getPage());
 			}else {
 				req.setAttribute("message", message);
 			}

@@ -9,8 +9,11 @@
 <link href="css/style.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
-	<div id="reserveZone">
-		${dayList }
+	<div id="reservezone" data-recode="">
+	${dayList }
+		<div id ="menuList"></div>
+		<div id ="orderList"></div>
 	</div>
+	<input type ="button" value="예약하기" onClick= "callData()">
 </body>
 </html>
